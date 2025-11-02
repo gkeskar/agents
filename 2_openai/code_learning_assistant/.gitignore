@@ -1,0 +1,18 @@
+# Exclude temporary/backup repository
+temp_repo/
+
+# Exclude generated learning documentation (users will generate their own)
+learning_docs/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+
