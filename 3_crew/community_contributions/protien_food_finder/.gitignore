@@ -1,6 +1,8 @@
 .env
 __pycache__/
 .DS_Store
+.venv/
+venv/
 
 # CrewAI cache and memory
 .crewai/
