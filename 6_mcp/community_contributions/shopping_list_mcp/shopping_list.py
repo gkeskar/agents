@@ -162,6 +162,55 @@ class ShoppingList:
             "price": item.price,
             "added_at": item.added_at
         }
+    
+    # ─────────────────────────────────────────────────────────────
+    # Sharing / Export Methods
+    # ─────────────────────────────────────────────────────────────
+    
+    def format_for_sms(self) -> str:
+        """Format shopping list for SMS (concise, no emojis)."""
+        if not self._items:
+            return "Shopping list is empty"
+        
+        lines = ["Shopping List:"]
+        for item in self._items.values():
+            price_str = f" ${item.price:.2f}" if item.price else ""
+            lines.append(f"- {item.name} x{item.quantity}{price_str}")
+        
+        total = self.get_total_cost()
+        if total > 0:
+            lines.append(f"Total: ${total:.2f}")
+        
+        return "\n".join(lines)
+    
+    def format_for_email(self) -> str:
+        """Format shopping list for email (detailed, with categories)."""
+        if not self._items:
+            return "Your shopping list is empty."
+        
+        # Group by category
+        by_category: Dict[str, List[ShoppingItem]] = {}
+        for item in self._items.values():
+            cat = item.category
+            if cat not in by_category:
+                by_category[cat] = []
+            by_category[cat].append(item)
+        
+        lines = ["🛒 Your Shopping List\n"]
+        
+        for category, items in sorted(by_category.items()):
+            lines.append(f"\n📦 {category}:")
+            for item in items:
+                price_str = f" - ${item.price:.2f}" if item.price else ""
+                lines.append(f"  • {item.name} (x{item.quantity}){price_str}")
+        
+        lines.append(f"\n{'─' * 30}")
+        total = self.get_total_cost()
+        lines.append(f"💰 Total: ${total:.2f}")
+        lines.append(f"📊 Budget: ${self._budget:.2f}")
+        lines.append(f"💵 Remaining: ${self._budget - total:.2f}")
+        
+        return "\n".join(lines)
 # ─────────────────────────────────────────────────────────────────
 # Singleton Pattern - One global shopping list instance
 # ─────────────────────────────────────────────────────────────────
